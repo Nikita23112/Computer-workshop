@@ -54,7 +54,7 @@ Embedding маркеров
 события события
 (ˆtⱼ₊₁) (ŷⱼ₊₁)
 
-**Реализованная архитектура (PyTorch):**
+###**Реализованная архитектура (PyTorch):**
 
 ```python
 class RMTPP(nn.Module):
@@ -65,7 +65,8 @@ class RMTPP(nn.Module):
         self.linear1 = nn.Linear(hidden_dim, hidden_dim//3)
         self.relu = nn.ReLU()
         self.linear2 = nn.Linear(hidden_dim//3, 4)  # 4 выхода: время + 3 параметра
-Функция потерь
+
+###Функция потерь
 Используется комбинированная MSE-потеря для двух целевых переменных:
 def masked_mse_loss(predictions, targets):
     loss_time = mse(predictions[:, 0], targets[:, 0])   # время следующего измерения
