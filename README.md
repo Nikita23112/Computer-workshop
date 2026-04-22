@@ -50,6 +50,7 @@ class RMTPP(nn.Module):
         self.linear1 = nn.Linear(hidden_dim, hidden_dim//3)
         self.relu = nn.ReLU()
         self.linear2 = nn.Linear(hidden_dim//3, 4)  # 4 выхода: время + 3 параметра
+```
 
 ### Функция потерь
 
@@ -60,3 +61,4 @@ def masked_mse_loss(predictions, targets):
     loss_time = mse(predictions[:, 0], targets[:, 0])   # время следующего измерения
     loss_glucose = mse(predictions[:, 1], targets[:, 1]) # уровень глюкозы
     return (loss_time + loss_glucose) / 2
+```
