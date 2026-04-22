@@ -38,18 +38,25 @@ RMTPP (Recurrent Marked Temporal Point Process) — класс моделей д
 - Введённый инсулин (в единицах)
 - Потреблённые углеводы (в граммах)
 
-### Архитектура модели
-Входная последовательность: (t₁, y₁), (t₂, y₂), ..., (tₙ, yₙ)
-↓
-Embedding маркеров
-↓
-Рекуррентный слой (LSTM)
-↓
-Скрытое состояние hⱼ
-↓
-┌────────────┴────────────┐
-↓ ↓
-Предсказание времени Предсказание маркера
-следующего следующего
-события события
-(ˆtⱼ₊₁) (ŷⱼ₊₁)
+
+### Реализованная архитектура (PyTorch)
+
+```python
+class RMTPP(nn.Module):
+    def __init__(self, input_dim, hidden_dim):
+        super(RMTPP, self).__init__()
+        self.lstm = nn.LSTM(input_dim, hidden_dim, batch_first=True)
+        self.dropout = nn.Dropout(0.1)
+        self.linear1 = nn.Linear(hidden_dim, hidden_dim//3)
+        self.relu = nn.ReLU()
+        self.linear2 = nn.Linear(hidden_dim//3, 4)  # 4 выхода: время + 3 параметра
+
+### Функция потерь
+
+Используется комбинированная MSE-потеря для двух целевых переменных:
+
+```python
+def masked_mse_loss(predictions, targets):
+    loss_time = mse(predictions[:, 0], targets[:, 0])   # время следующего измерения
+    loss_glucose = mse(predictions[:, 1], targets[:, 1]) # уровень глюкозы
+    return (loss_time + loss_glucose) / 2
